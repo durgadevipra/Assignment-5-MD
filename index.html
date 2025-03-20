@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment 5_Mobile Application Development Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .question-container { margin-bottom: 20px; }
+        .correct { background-color: lightgreen; }
+        .wrong { background-color: lightcoral; }
+        #scoreDisplay { display: none; }
+        #quizContainer { display: none; }
+    </style>
+</head>
+<body>
+    <h1>Assignment 5</h1>
+    <h2><u>Mobile Application Development Quiz</u></h2>
+    <div id="userForm">
+        <label>Enter your Name:</label> <input type="text" id="userName"><br>
+        <label>Enter your Class:</label> <input type="text" id="userClass"><br>
+        <button id="startQuizBtn">Start Quiz</button>
+    </div>
+    <div id="quizContainer"></div>
+    <button id="submitBtn" style="display:none;">Submit Quiz</button>
+    <button id="viewScoreBtn" style="display:none;">View Score</button>
+    <div id="scoreDisplay"></div>
+
+    <script>
+        const questions = [
+            { question: "What is HTTP used for in web services?", answers: ["Data transfer", "UI Design", "Database management", "Memory allocation"], correct: 0 },
+            { question: "What format is commonly used for data exchange in web services?", answers: ["XML", "JSON", "CSV", "YAML"], correct: 1 },
+            { question: "Which method is used to make a GET request in Android?", answers: ["HttpURLConnection", "Intent", "RecyclerView", "Service"], correct: 0 },
+            { question: "How are JSON services consumed in Android?", answers: ["Using Retrofit", "Using ViewPager", "Using ConstraintLayout", "Using Intent"], correct: 0 },
+            { question: "What is a Service in Android?", answers: ["A component for UI", "A background component", "A layout manager", "A storage mechanism"], correct: 1 },
+            { question: "What is IntentService used for?", answers: ["Handling asynchronous requests", "Creating UI components", "Managing network calls", "Handling databases"], correct: 0 },
+            { question: "What is the purpose of JSON parsing?", answers: ["Data transformation", "Image editing", "Network communication", "Database storage"], correct: 0 },
+            { question: "What is the key feature of threading?", answers: ["Parallel execution", "Data storage", "UI designing", "Database management"], correct: 0 },
+            { question: "Which method is called when a Service is started?", answers: ["onCreate()", "onStartCommand()", "onDestroy()", "onPause()"], correct: 1 },
+            { question: "What does AsyncTask do?", answers: ["Performs background tasks", "Displays UI", "Creates databases", "Manages memory"], correct: 0 },
+            { question: "Which method is used to bind a Service to an Activity?", answers: ["bindService()", "startService()", "stopService()", "unbindService()"], correct: 0 },
+            { question: "What is the use of Gson library?", answers: ["Parsing JSON", "Creating UI", "Database management", "Handling images"], correct: 0 },
+            { question: "Which HTTP method is used for data submission?", answers: ["POST", "GET", "DELETE", "PUT"], correct: 0 },
+            { question: "What is a RESTful web service?", answers: ["Stateless service", "Stateful service", "UI framework", "Database model"], correct: 0 },
+            { question: "What is Retrofit used for?", answers: ["Consuming REST APIs", "UI development", "Thread management", "Storage handling"], correct: 0 },
+            { question: "What is the purpose of IntentService?", answers: ["Handle asynchronous requests", "Create UI", "Manage threads", "Display JSON"], correct: 0 },
+            { question: "What is multithreading?", answers: ["Running multiple threads concurrently", "UI rendering", "File storage", "Database management"], correct: 0 },
+            { question: "How to consume REST APIs in Android?", answers: ["Using Retrofit", "Using RecyclerView", "Using Intent", "Using FrameLayout"], correct: 0 },
+            { question: "What is the main purpose of JSON in Android?", answers: ["Data exchange", "UI design", "Database access", "File handling"], correct: 0 },
+            { question: "What is the purpose of AsyncTask?", answers: ["Perform background tasks", "Create databases", "Manage UI", "Store data"], correct: 0 }
+        ];
+
+        document.getElementById('startQuizBtn').addEventListener('click', () => {
+            const name = document.getElementById('userName').value;
+            const userClass = document.getElementById('userClass').value;
+
+            if (!name || !userClass) {
+                alert('Please enter your name and class.');
+                return;
+            }
+
+            document.getElementById('userForm').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'block';
+
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question-container');
+                questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>
+                    ${q.answers.map((answer, i) => `<label><input type="radio" name="question${index}" value="${i}"> ${answer}</label><br>`).join('')}`;
+                quizContainer.appendChild(questionDiv);
+            });
+        });
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption) {
+                    const userAnswer = parseInt(selectedOption.value);
+                    if (userAnswer === q.correct) {
+                        score++;
+                        selectedOption.parentElement.classList.add('correct');
+                    } else {
+                        selectedOption.parentElement.classList.add('wrong');
+                        document.querySelectorAll(`input[name="question${index}"]`)[q.correct].parentElement.classList.add('correct');
+                    }
+                }
+            });
+            document.getElementById('viewScoreBtn').style.display = 'block';
+
+            document.getElementById('viewScoreBtn').addEventListener('click', () => {
+                document.getElementById('scoreDisplay').innerHTML = `<table border='1'><tr><th>Name</th><th>Class</th><th>Score</th></tr><tr><td>${document.getElementById('userName').value}</td><td>${document.getElementById('userClass').value}</td><td>${score} / 20</td></tr></table>`;
+                document.getElementById('scoreDisplay').style.display = 'block';
+            });
+        });
+
+        document.addEventListener('selectstart', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && ['c', 'x', 's', 'u'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
